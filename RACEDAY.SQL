@@ -1,11 +1,12 @@
 CREATE DATABASE RACEDAY;
+Use RaceDay;
 
-DROP TABLE IF EXISTS Results;
-DROP TABLE IF EXISTS Enrolments;
-DROP TABLE IF EXISTS Categories;
-DROP TABLE IF EXISTS Events;
-DROP TABLE IF EXISTS Participants;
-DROP TABLE IF EXISTS Organisers;
+DROP TABLE Results;
+DROP TABLE Enrolments;
+DROP TABLE Categories;
+DROP TABLE Events;
+DROP TABLE Participants;
+DROP TABLE Organisers;
 
 CREATE TABLE Organisers  (
 organisers_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -42,36 +43,31 @@ FOREIGN KEY (organisers_id) REFERENCES Organisers(organisers_id)
 
 CREATE TABLE Categories (
 category_id INT IDENTITY(1,1) PRIMARY KEY,
-event_id INT NOT NULL,
 category_name VARCHAR (100) NOT NULL,
-category_description TEXT,
+category_description VARCHAR(250) NOT NULL,
+category_distance VARCHAR(250) NOT NULL,
 created_at DATETIME DEFAULT GETDATE(),
-FOREIGN KEY (event_id) REFERENCES Events(event_id) ON DELETE CASCADE
+event_id INT FOREIGN KEY REFERENCES Events(event_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Enrolments (
 enrolment_id INT IDENTITY(1,1) PRIMARY KEY,
-participant_id INT NOT NULL,
-category_id INT NOT NULL,
 enrolment_date DATETIME DEFAULT GETDATE(),
 status VARCHAR(20) DEFAULT 'Registered' CHECK (status IN ('Registered', 'Completed','Withdrawn')),
-FOREIGN KEY (participant_id) REFERENCES Participants (particicpant_id),
-FOREIGN KEY (category_id) REFERENCES Categories (category_id),
---ensure one enrolment per participant per category 
-CONSTRAINT UQ_Enrolment_ParticipantCategory UNIQUE (participant_id,category_id)
+participant_id INT FOREIGN KEY REFERENCES Participants(participant_id),
+category_id INT FOREIGN KEY REFERENCES Categories(category_id),
 );
 
 CREATE TABLE Results (
 
 results_id INT IDENTITY(1,1) PRIMARY KEY,
-enrolment_id INT UNIQUE NOT NULL,
 finish_time TIME NULL,
 position INT NULL,
 notes TEXT,
 updated_by INT NOT NULL,         --organiser who recorded the result
 updated_at DATETIME DEFAULT GETDATE(),
-FOREIGN KEY (enrolment_id) REFERENCES Enrolments (enrolment_id) ON DELETE CASCADE,
-FOREIGN KEY (updated_by) REFERENCES Organisers (organisers_id)
+enrolment_id INT FOREIGN KEY REFERENCES Enrolments(enrolment_id) ON DELETE CASCADE,
+organisers_id INT FOREIGN KEY REFERENCES Organisers (organisers_id)
 );
 
 INSERT INTO Organisers (organisers_email, password_hash, full_name, organisation_name, contact_phone) VALUES
@@ -90,12 +86,12 @@ INSERT INTO Events (organisers_id, event_name,event_description, event_date, eve
 (2, 'Cape Town Cycle Tour', 'Scenic 109km cycle around the Cape Peninsula.', '2026-03-14', 'Cape Town, Western Cape', 109.0, 'Cycle'),
 (1, 'Soweto Charity Walk', 'Community charity walk through Soweto.', '2026-07-20', 'Soweto, Gauteng', 10.0, 'Walk');
 
-INSERT INTO Categories (event_id, category_id,category_description) VALUES
-(1, '10km', 'Short distance road race'),
-(1, '21km', 'Half marathon'),
-(1, '42km', 'Full marathon'),
-(2, '109km', 'Full cycle tour distance'),
-(3, '10km', 'Standard 10km walking route');
+INSERT INTO Categories (event_id,category_name, category_distance ,category_description) VALUES
+(1,'Runners', '10km', 'Short distance road race'),
+(1,'Johnny Walker', '21km', 'Half marathon'),
+(1,'Sprint Dasher', '42km', 'Full marathon'),
+(2,'Cyclers', '10km', 'Full cycle tour distance'),
+(3,'Walkers', '10km', 'Standard 10km walking route');
 
 INSERT INTO Enrolments(participant_id,category_id,status) VALUES
 (1, 1, 'Registered'),   -- Sipho in Durban 10km
@@ -107,5 +103,12 @@ INSERT INTO Enrolments(participant_id,category_id,status) VALUES
  (1, '00:45:23', 12, 'First race of season', 1),   -- Sipho's 10km result, recorded by Theo
  (2, '01:45:10', 35, 'Personal best', 1);           -- Emma's 21km result, recorded by Theo
 
+
+SELECT * FROM Organisers;
+SELECT * FROM Participants;
+SELECT * FROM Events;
+SELECT * FROM Enrolments;
+SELECT * FROM Categories;
+SELECT * FROM Results;
 
 
