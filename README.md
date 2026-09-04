@@ -80,7 +80,8 @@ A GitHub Actions workflow (`.github/workflows/validate-docs.yml`) validates that
 
 **Build status:** ✅ *(insert screenshot of the green Actions run here before submission)*
 
-`[Insert CI screenshot here]`
+<img width="671" height="633" alt="image" src="https://github.com/user-attachments/assets/c63a1026-a24c-4119-a2a9-749eda770bd2" />
+
 
 ## Video Presentation
 
