@@ -84,6 +84,5 @@ A GitHub Actions workflow (`.github/workflows/validate-docs.yml`) validates that
 
 
 ## Video Presentation
-
-`[Insert link to YouTube video here — covering ERD decisions, endpoint plan choices, and a live run of the SQL script in SSMS]`
+https://youtu.be/V3gy3D1yF-k
 
